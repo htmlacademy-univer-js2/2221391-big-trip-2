@@ -1,7 +1,6 @@
 import { render, RenderPosition } from '../render.js';
 import Point from '../view/point.js';
 import PointEdit from '../view/point-edit.js';
-import PointNew from '../view/point-new.js';
 import Sort from '../view/sort.js';
 import TripList from '../view/trip-list.js';
 
@@ -11,14 +10,17 @@ class Trip{
     this.container = container;
   }
 
-  init() {
+  init(pointsModel) {
+    this.pointsModel = pointsModel;
+    this.boardPoints = [...this.pointsModel.getPoints()];
+    this.destinations = [...this.pointsModel.getDestinations()];
+    this.offers = [...this.pointsModel.getOffers()];
     render(new Sort(), this.container, RenderPosition.BEFOREEND);
     render(this.component, this.container);
-    render(new PointNew(), this.component.getElement(), RenderPosition.BEFOREEND);
-    render(new PointEdit(), this.component.getElement(), RenderPosition.BEFOREEND);
+    render(new PointEdit(this.boardPoints[0], this.destinations, this.offers), this.component.getElement(), RenderPosition.BEFOREEND);
 
-    for(let i=0; i<3; i++) {
-      render(new Point(), this.component.getElement(), RenderPosition.BEFOREEND);
+    for (const point of this.boardPoints){
+      render(new Point(point, this.destinations, this.offers), this.component.getElement());
     }
   }
 }
