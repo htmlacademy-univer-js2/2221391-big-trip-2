@@ -6,20 +6,18 @@ const createTripEventsTemplate = () => (
 );
 
 export default class TripList {
-  constructor() {
-    this.element = null;
-  }
+  #element = null;
 
-  getTemplate() {
+  get template() {
     return createTripEventsTemplate;
   }
 
-  getElement() {
-    this.element = this.element || createElement(this.getTemplate());
-    return this.element;
+  get element() {
+    this.#element = this.#element || createElement(this.template);
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
