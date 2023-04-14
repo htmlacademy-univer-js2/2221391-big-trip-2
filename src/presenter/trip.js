@@ -3,6 +3,7 @@ import Point from '../view/point.js';
 import PointEdit from '../view/point-edit.js';
 import Sort from '../view/sort.js';
 import TripList from '../view/trip-list.js';
+import NoPointView from '../view/no-points-view.js';
 
 class Trip{
   #component = null;
@@ -24,12 +25,18 @@ class Trip{
     this.#offers = [...this.#pointsModel.offers];
     render(new Sort(), this.#container, RenderPosition.BEFOREEND);
     render(this.#component, this.#container);
-
-
-    for (const point of this.#boardPoints){
-      this.#renderPoint(point);
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(), this.#container);
     }
+    else {
+      render(new Sort(), this.#container, RenderPosition.BEFOREEND);
+      render(this.#component, this.#container);
+
+      for (const point of this.#boardPoints){
+        this.#renderPoint(point);
+      }
   }
+}
 
   #renderPoint = (point) => {
     const pointComponent = new Point(point, this.#destinations, this.#offers);
