@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomElement } from '../util.js';
+import { getRandomInteger, getRandomElement } from '../utils/common.js';
 import dayjs from 'dayjs';
 
 const POINTS_COUNT = 20;
@@ -71,7 +71,7 @@ const generatePoint = (id) => {
   return {
     basePrice: getRandomInteger(Price.MIN, Price.MAX),
     dateFrom: dayjs().add(getRandomInteger(-3, 0), 'day').add(getRandomInteger(-2, 0), 'hour').add(getRandomInteger(-59, 0), 'minute'),
-    dateTo: dayjs().add(getRandomInteger(0, 2), 'hour').add(getRandomInteger(0, 59), 'minute'),
+    dateTo: dayjs().add(getRandomInteger(0, 2), 'day').add(getRandomInteger(0, 2), 'hour').add(getRandomInteger(0, 59), 'minute'),
     destinationId: getRandomElement(destinations).id,
     id,
     isFavorite: Boolean(getRandomInteger()),
@@ -82,4 +82,10 @@ const generatePoint = (id) => {
 
 const getPoints = () => Array.from({length: POINTS_COUNT}).map((value, index) => generatePoint (index + 1));
 
-export {getPoints, getDestinations, getOffersByType };
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past'
+};
+
+export {getPoints, getDestinations, getOffersByType, FilterType};

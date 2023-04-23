@@ -3,6 +3,7 @@ import Filters from './view/filters.js';
 import Trip from './presenter/trip.js';
 import PointsModel from './model/point-model.js';
 import { getPoints, getDestinations, getOffersByType } from './mock/point.js';
+import { generateFilter } from './mock/filter.js';
 
 
 const filtersContainer = document.querySelector('.trip-controls__filters');
@@ -13,6 +14,8 @@ const offersByType = getOffersByType();
 const destinations = getDestinations();
 
 const pointsModel = new PointsModel();
-render(new Filters(), filtersContainer);
+const filters = generateFilter(pointsModel.points);
+
+render(new Filters(filters), filtersContainer);
 pointsModel.init(points, destinations, offersByType);
 tripPresenter.init(pointsModel);

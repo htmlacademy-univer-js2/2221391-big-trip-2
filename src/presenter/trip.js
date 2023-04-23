@@ -23,8 +23,7 @@ class Trip{
     this.#boardPoints = [...this.#pointsModel.points];
     this.#destinations = [...this.#pointsModel.destinations];
     this.#offers = [...this.#pointsModel.offers];
-    render(new Sort(), this.#container);
-    render(this.#component, this.#container);
+
     if (this.#boardPoints.length === 0) {
       render(new NoPointView(), this.#container);
     }
@@ -58,10 +57,12 @@ class Trip{
       }
     };
 
-    previewPointComponent.setEditClickHandler(() => {
+    const handleEditClick = () => {
       replacePreviewPointToEditingPoint();
       document.addEventListener('keydown', onEscKeyDown);
-    });
+    };
+
+    previewPointComponent.setEditClickHandler(handleEditClick);
 
     editingPointComponent.setPreviewClickHandler(() => {
       replaceEditingPointToPreviewPoint();
