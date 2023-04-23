@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getDateTime } from '../util.js';
+import { getDateTime } from '../utils/point-date.js';
 
 const renderDestinationPictures = (pictures) => {
   let result = '';
@@ -143,7 +143,7 @@ export default class EditingFormView extends AbstractView {
     this.#offers = offers;
   }
 
-  get template() {
+  get template () {
     return createEditingFormTemplate(this.#point, this.#destination, this.#offers);
   }
 
@@ -166,4 +166,5 @@ export default class EditingFormView extends AbstractView {
     evt.preventDefault();
     this._callback.formSubmit();
   };
+
 }
