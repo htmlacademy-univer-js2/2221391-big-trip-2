@@ -1,81 +1,73 @@
-import { render, replace } from '../framework/render.js';
-import Point from '../view/point.js';
-import PointEdit from '../view/point-edit.js';
+import { render, RenderPosition } from '../framework/render.js';
 import Sort from '../view/sort.js';
 import TripList from '../view/trip-list.js';
 import NoPointView from '../view/no-points-view.js';
+import PointPresenter from './point-presenter.js';
+import { updateItem } from '../utils/common.js';
 
 class Trip{
-  #component = null;
-  #container = null;
+  #tripContainer = null;
   #pointsModel = null;
   #boardPoints = null;
-  #destinations = null;
-  #offers = null;
+  #noPointComponent = new NoPointView();
+  #sortComponent = new Sort();
+  #pointListComponent = new TripList();
+  #pointPresenter = new Map();
 
-  constructor({container}) {
-    this.#component = new TripList();
-    this.#container = container;
+  constructor(tripContainer, pointsModel) {
+    this.#tripContainer = tripContainer;
+    this.#pointsModel = pointsModel;
   }
 
-  init(pointsModel) {
-    this.#pointsModel = pointsModel;
+  init() {
     this.#boardPoints = [...this.#pointsModel.points];
-    this.#destinations = [...this.#pointsModel.destinations];
-    this.#offers = [...this.#pointsModel.offers];
 
     if (this.#boardPoints.length === 0) {
-      render(new NoPointView(), this.#container);
+      this.#renderNoPoints();
     }
     else {
-      render(new Sort(), this.#container);
-      render(this.#component, this.#container);
-
-      for (const point of this.#boardPoints){
-        this.#renderPoint(point);
-      }
+      this.#renderSort();
+      this.#renderPointList();
+    }
   }
-}
+
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #handlePointChange = (updatedPoint) => {
+    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #renderSort = () => {
+    render(this.#sortComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+  };
 
   #renderPoint = (point) => {
-    const previewPointComponent = new Point(point, this.#destinations, this.#offers);
-    const editingPointComponent = new PointEdit(point, this.#destinations, this.#offers);
+    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#pointsModel, this.#handlePointChange, this.#handleModeChange);
+    pointPresenter.init(point);
+    this.#pointPresenter.set(point.id, pointPresenter);
+  };
 
-    const replacePreviewPointToEditingPoint = () => {
-      replace(editingPointComponent, previewPointComponent);
-    };
+  #renderPoints = (from, to) => {
+    this.#boardPoints
+      .slice(from, to)
+      .forEach((point) => this.#renderPoint(point));
+  };
 
-    const replaceEditingPointToPreviewPoint = () => {
-      replace(previewPointComponent, editingPointComponent);
-    };
+  #renderNoPoints = () => {
+    render(this.#noPointComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+  };
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceEditingPointToPreviewPoint();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
+  #clearPointList = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
+  };
 
-    const handleEditClick = () => {
-      replacePreviewPointToEditingPoint();
-      document.addEventListener('keydown', onEscKeyDown);
-    };
-
-    previewPointComponent.setEditClickHandler(handleEditClick);
-
-    editingPointComponent.setPreviewClickHandler(() => {
-      replaceEditingPointToPreviewPoint();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    editingPointComponent.setFormSubmitHandler(() => {
-      replaceEditingPointToPreviewPoint();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-
-    render(previewPointComponent, this.#component.element);
+  #renderPointList = () => {
+    render(this.#pointListComponent, this.#tripContainer);
+    this.#renderPoints(0, this.#boardPoints.length);
   };
 }
 
