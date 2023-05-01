@@ -8,14 +8,16 @@ import { generateFilter } from './mock/filter.js';
 
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const tripContainer = document.querySelector('.trip-events');
-const tripPresenter = new Trip({container: tripContainer});
 const points = getPoints();
 const offersByType = getOffersByType();
 const destinations = getDestinations();
 
 const pointsModel = new PointsModel();
+pointsModel.init(points, destinations, offersByType);
+const tripPresenter = new Trip(tripContainer, pointsModel);
+tripPresenter.init();
 const filters = generateFilter(pointsModel.points);
 
 render(new Filters(filters), filtersContainer);
-pointsModel.init(points, destinations, offersByType);
-tripPresenter.init(pointsModel);
+
+
