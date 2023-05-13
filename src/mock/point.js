@@ -81,7 +81,7 @@ const generatePoint = () => {
   };
 };
 
-const getPoints = () => Array.from({length: POINTS_COUNT}).map(() => generatePoint ());
+const getPoints = () => Array.from({length: POINTS_COUNT}).map(() => generatePoint()).sort();
 
 const FilterType = {
   EVERYTHING: 'everything',
