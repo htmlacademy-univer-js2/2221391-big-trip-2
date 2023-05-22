@@ -89,4 +89,4 @@ const FilterType = {
   PAST: 'past'
 };
 
-export {getPoints, getDestinations, getOffersByType, FilterType};
+export {getPoints, getDestinations, getOffersByType, FilterType, POINT_TYPES };
