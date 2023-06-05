@@ -83,10 +83,4 @@ const generatePoint = () => {
 
 const getPoints = () => Array.from({length: POINTS_COUNT}).map(() => generatePoint()).sort();
 
-const FilterType = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PAST: 'past'
-};
-
-export {getPoints, getDestinations, getOffersByType, FilterType, POINT_TYPES };
+export {getPoints, getDestinations, getOffersByType, POINT_TYPES };
