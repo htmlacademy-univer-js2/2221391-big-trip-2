@@ -9,14 +9,18 @@ export default class PointNewPresenter {
   #changeData = null;
   #destroyCallback = null;
   #pointsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
   #destinations = null;
   #offers = null;
-  #isNewPoint = true;
 
-  constructor(pointListContainer, changeData, pointsModel) {
+
+  constructor({pointListContainer, changeData, pointsModel, destinationsModel, offersModel}) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
     this.#pointsModel = pointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
   init = (callback) => {
@@ -25,16 +29,16 @@ export default class PointNewPresenter {
     if (this.#editingPointComponent !== null) {
       return;
     }
-    this.#destinations = [...this.#pointsModel.destinations];
-    this.#offers = [...this.#pointsModel.offers];
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
 
     this.#editingPointComponent = new EditeFormView({
       destination: this.#destinations,
       offers: this.#offers,
-      isNewPoint: this.#isNewPoint
+      isNewPoint: true,
     });
     this.#editingPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#editingPointComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#editingPointComponent.setResetClickHandler(this.#handleResetClick);
 
     render(this.#editingPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
@@ -61,7 +65,7 @@ export default class PointNewPresenter {
     }
   };
 
-  #handleDeleteClick = () => {
+  #handleResetClick = () => {
     this.destroy();
   };
 
