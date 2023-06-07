@@ -10,7 +10,7 @@ import PointsApiService from './api-service/points-api-service.js';
 import DestinationsApiService from './api-service/destinations-api-service.js';
 import OffersApiService from './api-service/offers-api-service.js';
 
-const AUTHORIZATION = 'Basic kIfptewed204f134d6';
+const AUTHORIZATION = 'Basic kIfptewwd204f134d6';
 const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
 
 const filtersContainer = document.querySelector('.trip-controls__filters');
