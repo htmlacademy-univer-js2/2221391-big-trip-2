@@ -1,17 +1,14 @@
-import {render} from './framework/render.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import Trip from './presenter/trip.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
-import NewPointButtonView from './view/new-point-button-view.js';
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
-import PointsApiService from './api-service/points-api-service.js';
-import DestinationsApiService from './api-service/destinations-api-service.js';
-import OffersApiService from './api-service/offers-api-service.js';
-
-const AUTHORIZATION = 'Basic kIfptewwd204f134d6';
-const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
+import PointsApiService from './api-service/points-api.js';
+import DestinationsApiService from './api-service/destinations-api.js';
+import OffersApiService from './api-service/offers-api.js';
+import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
+import { END_POINT, AUTHORIZATION } from './const.js';
 
 const filtersContainer = document.querySelector('.trip-controls__filters');
 const tripContainer = document.querySelector('.trip-events');
@@ -30,6 +27,7 @@ const filterPresenter = new FilterPresenter({
 filterPresenter.init();
 
 const tripPresenter = new Trip({
+  tripInfoContainer: siteHeaderElement.querySelector('.trip-main__trip-info'),
   tripContainer: tripContainer,
   pointsModel: pointsModel,
   filterModel: filterModel,
@@ -38,22 +36,20 @@ const tripPresenter = new Trip({
 });
 tripPresenter.init();
 
-const newPointButtonComponent = new NewPointButtonView();
+const newPointButtonPresenter = new NewPointButtonPresenter({
+  newPointButtonContainer: siteHeaderElement,
+  destinationsModel: destinationsModel,
+  offersModel: offersModel,
+  boardPresenter: tripPresenter
+});
 
-const handleNewPointFormClose = () => {
-  newPointButtonComponent.element.disabled = false;
-};
+newPointButtonPresenter.init();
 
-const handleNewPointButtonClick = () => {
-  tripPresenter.createPoint(handleNewPointFormClose);
-  newPointButtonComponent.element.disabled = true;
-};
 
 offersModel.init().finally(() => {
   destinationsModel.init().finally(() => {
     pointsModel.init().finally(() => {
-      render(newPointButtonComponent, siteHeaderElement);
-      newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+      newPointButtonPresenter.renderNewPointButton();
     });
   });
 });
