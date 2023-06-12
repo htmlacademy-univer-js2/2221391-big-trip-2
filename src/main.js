@@ -22,7 +22,9 @@ const filterModel = new FilterModel();
 const filterPresenter = new FilterPresenter({
   filterContainer: filtersContainer,
   pointsModel: pointsModel,
-  filterModel: filterModel
+  filterModel: filterModel,
+  destinationsModel: destinationsModel,
+  offersModel: offersModel
 });
 filterPresenter.init();
 
@@ -40,7 +42,8 @@ const newPointButtonPresenter = new NewPointButtonPresenter({
   newPointButtonContainer: siteHeaderElement,
   destinationsModel: destinationsModel,
   offersModel: offersModel,
-  boardPresenter: tripPresenter
+  boardPresenter: tripPresenter,
+  pointsModel: pointsModel
 });
 
 newPointButtonPresenter.init();

@@ -3,8 +3,7 @@ import { ApiServiceResponseMethod } from '../const.js';
 
 export default class PointsApiService extends ApiService {
   get points() {
-    return this._load({url: 'points'})
-      .then(ApiService.parseResponse);
+    return this._load({url: 'points'}).then(ApiService.parseResponse);
   }
 
   updatePoint = async (point) => {
