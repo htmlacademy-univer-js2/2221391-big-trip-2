@@ -1,6 +1,7 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import EditeFormView from '../view/point-edit.js';
 import { UserAction, UpdateType } from '../const.js';
+import { isEscKey } from '../utils/point.js';
 
 export default class PointNewPresenter {
   #pointListContainer = null;
@@ -30,7 +31,7 @@ export default class PointNewPresenter {
     this.#offers = [...this.#offersModel.offers];
 
     this.#editingPointComponent = new EditeFormView({
-      destination: this.#destinations,
+      destinations: this.#destinations,
       offers: this.#offers,
       isNewPoint: true,
     });
@@ -75,7 +76,7 @@ export default class PointNewPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscKey(evt)) {
       evt.preventDefault();
       this.destroy();
     }

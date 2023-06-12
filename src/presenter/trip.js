@@ -5,12 +5,11 @@ import TripList from '../view/trip-list.js';
 import NoPointView from '../view/no-points-view.js';
 import PointPresenter from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
-import { filter } from '../utils/filter.js';
 import { UpdateType, UserAction, SortType, FilterType, TimeLimit } from '../const.js';
 import TripInfoPresenter from './trip-info-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import NoAdditionalInfoView from '../view/no-additional-info-view.js';
-import { sorting } from '../utils/point.js';
+import { sorting, filtering } from '../utils/point.js';;
 
 
 
@@ -61,8 +60,8 @@ export default class Trip{
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-    const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
+    const filteredPoints = filtering[this.#filterType](this.#pointsModel.points);
+    sorting[this.#currentSortType](filteredPoints);
     return filteredPoints;
   }
 
@@ -225,7 +224,9 @@ export default class Trip{
       return;
     }
 
-    if (this.#offersModel.offers.length === 0 || this.#destinationsModel.destinations.length === 0) {
+    if (this.#offersModel.offers.length === 0 || this.#offersModel.isSuccessfulLoading === false ||
+      this.#destinationsModel.destinations.length === 0 || this.#destinationsModel.isSuccessfulLoading === false ||
+      this.#pointsModel.isSuccessfulLoading === false) {
       this.#renderNoAdditionalInfo();
       return;
     }

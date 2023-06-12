@@ -4,6 +4,7 @@ import { UpdateType } from '../const.js';
 export default class PointsModel extends Observable{
   #points = [];
   #pointsApiService = null;
+  #isSuccessfulLoading = false;
 
   constructor(pointsApiService) {
     super();
@@ -14,14 +15,20 @@ export default class PointsModel extends Observable{
     try {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
+      this.#isSuccessfulLoading = true;
     } catch(err) {
       this.#points = [];
+      this.#isSuccessfulLoading = false;
     }
     this._notify(UpdateType.INIT);
   };
 
   get points() {
     return this.#points;
+  }
+
+  get isSuccessfulLoading() {
+    return this.#isSuccessfulLoading;
   }
 
   updatePoint = async (updateType, update) => {
@@ -78,8 +85,8 @@ export default class PointsModel extends Observable{
   #adaptToClient = (point) => {
     const adaptedPoint = {...point,
       basePrice: point['base_price'],
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
-      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      dateFrom: (point['date_from'] !== null || point['date_from'] !== undefined) ? new Date(point['date_from']) : point['date_from'],
+      dateTo: (point['date_to'] !== null || point['date_to'] !== undefined) ? new Date(point['date_to']) : point['date_to'],
       isFavorite: point['is_favorite'],
     };
 

@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
-import { SortType } from '../const.js';
+import { SortType, FilterType } from '../const.js';
 
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
 const DATE_FORMAT = 'YYYY-MM-DD';
 const DATE_TIME_FORMAT = 'DD/MM/YY HH:mm';
 const TIME_FORMAT = 'HH:mm';
+
 
 const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
 
@@ -15,13 +16,13 @@ const getHoursOutput = (days, restHours) => (days <= 0 && restHours <= 0) ? '' :
 
 const getMinutesOutput = (restMinutes) => `${`${restMinutes}`.padStart(2, '0')}M`;
 
-const duration = (dateFrom, dateTo) => {
+const getDuration = (dateFrom, dateTo) => {
   const start = dayjs(dateFrom);
   const end = dayjs(dateTo);
   const difference = end.diff(start, 'minute');
 
-  const days = Math.floor(difference / TOTAL_DAY_MINUTES_COUNT);
-  const restHours = Math.floor((difference - days * TOTAL_DAY_MINUTES_COUNT) / HOUR_MINUTES_COUNT);
+  const days = Math.trunc(difference / TOTAL_DAY_MINUTES_COUNT);
+  const restHours = Math.trunc((difference - days * TOTAL_DAY_MINUTES_COUNT) / HOUR_MINUTES_COUNT);
   const restMinutes = difference - (days * TOTAL_DAY_MINUTES_COUNT + restHours * HOUR_MINUTES_COUNT);
 
   const daysOutput = getDaysOutput(days);
@@ -59,5 +60,13 @@ const sorting = {
   [SortType.PRICE]: (points) => points.sort(sortPricePoint)
 };
 
-export { humanizePointDueDate, duration, getDate, getDateTime, getTime, isPointDatePast, isPointDateFuture, isPointDateFuturePast,
-  sorting };
+const isEscKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+const filtering = {
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.FUTURE]: (points) => points.filter((point) => isPointDateFuture(point.dateFrom) || isPointDateFuturePast(point.dateFrom, point.dateTo)),
+  [FilterType.PAST]: (points) => points.filter((point) => isPointDatePast(point.dateTo) || isPointDateFuturePast(point.dateFrom, point.dateTo)),
+};
+
+export { humanizePointDueDate, getDuration, getDate, getDateTime, getTime, isPointDatePast, isPointDateFuture, isPointDateFuturePast,
+  sorting, filtering, isEscKey };
