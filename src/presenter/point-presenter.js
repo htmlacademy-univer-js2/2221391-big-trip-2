@@ -86,6 +86,7 @@ export default class PointPresenter {
       this.#replaceEditingPointToPreviewPoint();
     }
   };
+
   setSaving = () => {
     if (this.#mode === Mode.EDITING) {
       this.#editingPointComponent.updateElement({
