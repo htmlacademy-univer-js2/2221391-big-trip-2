@@ -10,7 +10,7 @@ const BLANK_POINT = {
   basePrice: 100,
   dateFrom: dayjs(),
   dateTo: dayjs(),
-  destination: 0,
+  destination: 1,
   isFavorite: false,
   offers: [],
   type: PointType.TAXI,
@@ -20,7 +20,7 @@ const BLANK_POINT = {
 const renderDestinationPictures = (pictures) => pictures.length === 0 ? '' :
   pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join('');
 
-  const renderDestinationNames = (destinations) => destinations.length === 0 ? '' :
+const renderDestinationNames = (destinations) => destinations.length === 0 ? '' :
   destinations.map((destination) => `<option value="${destination.name}"></option>`).join('');
 
 const renderOffers = (allOffers, checkedOffers, isDisabled) => allOffers.map((offer) => `<div class="event__offer-selector">
@@ -136,7 +136,7 @@ export default class EditingFormView extends AbstractStatefulView {
 
   constructor({point = BLANK_POINT, destinations, offers, isNewPoint}) {
     super();
-    this._state = EditingFormView.parsePointToState(point)
+    this._state = EditingFormView.parsePointToState(point);
     this.#destinations = destinations;
     this.#offers = offers;
     this.#isNewPoint = isNewPoint;
@@ -211,7 +211,7 @@ export default class EditingFormView extends AbstractStatefulView {
     evt.preventDefault();
     const destination = this.#destinations.find((dest) => dest.name === evt.target.value);
     this.updateElement({
-      destination: destination.id,
+      destination: destination === undefined ? this.#destinations[0].id : destination.id,
     });
   };
 
@@ -313,10 +313,10 @@ export default class EditingFormView extends AbstractStatefulView {
   });
 
    static parseStateToPoint = (state) => {
-    const point = {...state};
-    delete point.isDisabled;
-    delete point.isSaving;
-    delete point.isDeleting;
-    return point;
-  };
+     const point = {...state};
+     delete point.isDisabled;
+     delete point.isSaving;
+     delete point.isDeleting;
+     return point;
+   };
 }

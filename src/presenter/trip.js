@@ -9,11 +9,10 @@ import { UpdateType, UserAction, SortType, FilterType, TimeLimit } from '../cons
 import TripInfoPresenter from './trip-info-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import NoAdditionalInfoView from '../view/no-additional-info-view.js';
-import { sorting, filtering } from '../utils/point.js';;
+import { sorting, filtering } from '../utils/point.js';
 
 
-
-export default class Trip{
+export default class Trip {
   #tripInfoContainer = null;
   #tripContainer = null;
   #pointsModel = null;
@@ -88,7 +87,7 @@ export default class Trip{
 
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-         this.#pointPresenter.get(update.id).setSaving();
+        this.#pointPresenter.get(update.id).setSaving();
         try {
           await this.#pointsModel.updatePoint(updateType, update);
         } catch(err) {
