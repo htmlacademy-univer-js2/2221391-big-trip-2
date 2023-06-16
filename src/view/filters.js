@@ -16,7 +16,7 @@ const createFilterTemplate = (filterItems, currentFilterType) => {
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))
     .join('');
 
-    return `<form class="trip-filters" action="#" method="get">
+  return `<form class="trip-filters" action="#" method="get">
     ${filterItemsTemplate}
     <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`;
@@ -35,7 +35,7 @@ export default class FiltersView extends AbstractView {
   get template() {
     return createFilterTemplate(this.#filters, this.#currentFilter);
   }
-  
+
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
     this.element.addEventListener('change', this.#filterTypeChangeHandler);
